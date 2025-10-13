@@ -23,40 +23,38 @@ Developed as part of the Data Structures and Algorithms (DSA) project.
 This guide explains how to clone the repository, set up dependencies, and run the visualization on Linux and Windows.
 
 🔽 Clone the Repository
-
-'''
+```
 git clone https://github.com/yourusername/b-tree-visualization.git
 cd b-tree-visualization
-'''
+```
 
 🐧 Linux Setup
   1️⃣ Install Dependencies
-  '''
+  ```
   sudo apt update
   sudo apt install python3 python3-pip -y
   pip install -r requirements.txt
-  '''
+  ```
 
 2️⃣ Run the Project
-  '''
+  ```
   python3 btree_visualization.py
-  '''
+  ```
 
 🪟 Windows Setup
   1️⃣ Install Dependencies
   
-  '''
+  ```
   Install Python 3.13.8
-  .
   
   Open Command Prompt and install the required packages:
   
   pip install -r requirements.txt
-  '''
+  ```
   2️⃣ Run the Project
- '''
+ ```
   python btree_visualization.py
-  '''
+  ```
 
 
 🧠 Notes
