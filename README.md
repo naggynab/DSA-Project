@@ -42,11 +42,11 @@ cd b-tree-visualization
 
   1️⃣ Install Dependencies
   
-  ```
+  
   Install Python 3.13.8
   
   Open Command Prompt and install the required packages:
-  
+  ```
   pip install -r requirements.txt
   ```
 
