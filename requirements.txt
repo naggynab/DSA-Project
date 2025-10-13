@@ -1,0 +1,5 @@
+# requirements.txt
+# This project uses only Python standard libraries (no external dependencies).
+# Compatible with Python 3.13.8 or later.
+
+python>=3.13.8
