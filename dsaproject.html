@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-Tree Visualization - DSA Project</title>
+
+    <!-- Prism.js for syntax highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+    <style>
+        body {
+            background-color: #0d1117;
+            color: #e6edf3;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background-color: #161b22;
+            border-bottom: 2px solid #30363d;
+        }
+
+        header h1 {
+            color: #58a6ff;
+            font-size: 2.2em;
+            margin: 0;
+        }
+
+        header h2 {
+            color: #9be9a8;
+            font-weight: 400;
+            margin-top: 5px;
+        }
+
+        .container {
+            max-width: 90%;
+            margin: 40px auto;
+            background-color: #161b22;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 0px 20px rgba(88, 166, 255, 0.1);
+        }
+
+        pre {
+            background-color: #0d1117 !important;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-x: auto;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .images {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .images img {
+            width: 45%;
+            margin: 10px;
+            border-radius: 12px;
+            border: 2px solid #30363d;
+            transition: transform 0.3s ease;
+        }
+
+        .images img:hover {
+            transform: scale(1.05);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 15px;
+            color: #7d8590;
+            border-top: 1px solid #30363d;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>DSA Project: B-Tree Visualization</h1>
+        <h2>By Nabina Thapa (080BCT047)</h2>
+    </header>
+
+    <div class="container">
+        <pre><code class="language-python">
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+
+# ----------------- B-TREE NODE -----------------
+class BTreeNode:
+    def __init__(self, t, leaf=False):
+        self.keys = []
+        self.child = []
+        self.leaf = leaf
+        self.t = t
+
+# ----------------- B-TREE STRUCTURE -----------------
+class BTree:
+    def __init__(self, t):
+        self.root = BTreeNode(t, True)
+        self.t = t
+
+    def insert(self, k):
+        r = self.root
+        if len(r.keys) == (2 * self.t - 1):
+            s = BTreeNode(self.t)
+            s.child.insert(0, r)
+            s.leaf = False
+            self._split(s, 0)
+            self.root = s
+            self._insert_non_full(s, k)
+        else:
+            self._insert_non_full(r, k)
+
+    def _insert_non_full(self, x, k):
+        i = len(x.keys) - 1
+        if x.leaf:
+            x.keys.append(None)
+            while i >= 0 and k < x.keys[i]:
+                x.keys[i + 1] = x.keys[i]
+                i -= 1
+            x.keys[i + 1] = k
+        else:
+            while i >= 0 and k < x.keys[i]:
+                i -= 1
+            i += 1
+            if len(x.child[i].keys) == (2 * self.t - 1):
+                self._split(x, i)
+                if k > x.keys[i]:
+                    i += 1
+            self._insert_non_full(x.child[i], k)
+
+    def _split(self, x, i):
+        t = self.t
+        y = x.child[i]
+        z = BTreeNode(t, y.leaf)
+        x.child.insert(i + 1, z)
+        x.keys.insert(i, y.keys[t - 1])
+        z.keys = y.keys[t:(2 * t - 1)]
+        y.keys = y.keys[0:t - 1]
+        if not y.leaf:
+            z.child = y.child[t:(2 * t)]
+            y.child = y.child[0:t - 1]
+
+# ----------------- VISUALIZATION HELPERS -----------------
+def get_width(node):
+    """Return width proportional to number of keys and children."""
+    base_width = 1.5  # constant space per key
+    if node.leaf:
+        return len(node.keys) * base_width
+    return sum(get_width(c) for c in node.child)
+
+def get_height(node):
+    if node.leaf:
+        return 1
+    return 1 + max(get_height(c) for c in node.child)
+
+def draw_node(ax, node, x, y, level_gap, scale):
+    key_width = 0.8   # Fixed width for each key box
+    node_height = 0.6
+    node_width = key_width * max(1, len(node.keys))
+
+    left = x - node_width / 2
+    cur_x = left
+
+    # Draw compartments (fixed size)
+    for key in node.keys:
+        rect = patches.Rectangle(
+            (cur_x, y - node_height / 2),
+            key_width, node_height,
+            linewidth=1.5, edgecolor='black', facecolor='#A8E6A3'
+        )
+        ax.add_patch(rect)
+        ax.text(cur_x + key_width / 2, y, str(key),
+                ha='center', va='center', fontsize=10, fontweight='bold')
+        cur_x += key_width
+
+    # Draw children recursively
+    if not node.leaf:
+        child_y = y - level_gap
+        widths = [get_width(c) for c in node.child]
+        total_width = sum(widths)
+        cur_x = x - total_width / 2 * scale
+
+        for c in node.child:
+            w = get_width(c)
+            child_x = cur_x + w / 2 * scale
+            ax.plot([x, child_x], [y - node_height / 2, child_y + node_height / 2],
+                    color='gray', linewidth=1)
+            draw_node(ax, c, child_x, child_y, level_gap, scale)
+            cur_x += w * scale
+
+def plot_btree(tree, live=False, ax=None):
+    height = get_height(tree.root)
+    width = get_width(tree.root)
+    level_gap = 2.0
+    scale = 2.0
+
+    if not live:
+        fig, ax = plt.subplots(figsize=(max(10, width * 1.2), max(6, height * 2)))
+
+    ax.clear()
+    ax.set_aspect('equal')
+    ax.axis('off')
+
+    draw_node(ax, tree.root, 0, 0, level_gap, scale)
+    ax.set_title("B-Tree Visualization", fontsize=14, fontweight='bold')
+
+    ax.set_xlim(-width * scale / 1.5, width * scale / 1.5)
+    ax.set_ylim(-height * level_gap, 2)
+
+    if live:
+        plt.draw()
+        plt.pause(0.8)
+    else:
+        plt.show()
+
+# ----------------- MAIN FUNCTION -----------------
+def main():
+    print("****************** B-Tree Insertion & Visualization ******************")
+    t = int(input("Enter minimum degree (t): "))
+    bt = BTree(t)
+
+    print("\nChoose insertion mode:")
+    print("1. Insert all numbers at once")
+    print("2. Insert one by one (visualize step-by-step)")
+    choice = input("Enter choice (1 or 2): ").strip()
+
+    if choice == "1":
+        nums = input("\nEnter numbers to insert (comma separated): ").strip().split(',')
+        for n in nums:
+            bt.insert(int(n.strip()))
+        plot_btree(bt)
+
+    elif choice == "2":
+        plt.ion()
+        fig, ax = plt.subplots(figsize=(10, 6))
+        while True:
+            key = input("Enter key to insert (or 'q' to quit): ").strip()
+            if key.lower() == 'q':
+                break
+            if key.isdigit():
+                bt.insert(int(key))
+                plot_btree(bt, live=True, ax=ax)
+            else:
+                print("Please enter a valid number.")
+        plt.ioff()
+        plt.show()
+    else:
+        print("Invalid choice. Please restart and enter 1 or 2.")
+
+if __name__ == "__main__":
+    main()
+</code></pre>
+    </div>
+
+    <div class="images">
+        <img src="b-tree_one.png" alt="B-Tree Visualization Example 1">
+        <img src="b-treevis2.png" alt="B-Tree Visualization Example 2">
+        <img src="b-tree_all.png" alt="B-Tree Visualization Example 1">
+        <img src="b-treevis1.png" alt="B-Tree Visualization Example 1">
+    </div>
+
+    <footer>
+        © 2025 Nabina Thapa (080BCT047) | B-Tree Insertion & Visualization Project
+    </footer>
+</body>
+</html>
