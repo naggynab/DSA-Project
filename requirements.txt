@@ -1,5 +1,6 @@
-# requirements.txt
-# This project uses only Python standard libraries (no external dependencies).
-# Compatible with Python 3.13.8 or later.
+# Requirements.txt
+# Dependencies for B-Tree Insertion & Visualization (DSA Project)
+# Compatible with Python 3.13.8 or higher
 
 python>=3.13.8
+matplotlib>=3.9.0
