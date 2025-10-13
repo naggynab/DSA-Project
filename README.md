@@ -1,7 +1,9 @@
-# DSA Project
-## B-Tree Insertion and Visualization
+#  B-Tree Insertion & Visualization (DSA Project)
+## 📖 Project Overview
 
-A Python project that demonstrates B-Tree insertion with real-time visualization of node splits and key organization. It helps users understand how B-Trees maintain balance and efficient search operations — an essential concept in database indexing and file systems.
+This project visualizes the insertion process in a ** B-Tree ** — a balanced tree data structure used in databases and file systems.
+It demonstrates how nodes split dynamically to maintain balance as elements are inserted.
+Developed as part of the Data Structures and Algorithms (DSA) project.
 
 Features:
 
@@ -11,12 +13,6 @@ Features:
 
 - Interactive and educational tool for DSA learning
 
-# 🧩 B-Tree Insertion & Visualization (DSA Project)
-## 📖 Project Overview
-
-This project visualizes the insertion process in a ** B-Tree ** — a balanced tree data structure used in databases and file systems.
-It demonstrates how nodes split dynamically to maintain balance as elements are inserted.
-Developed as part of the Data Structures and Algorithms (DSA) project.
 
 ## ⚙️ Project Setup Guide
 
@@ -29,6 +25,7 @@ cd b-tree-visualization
 ```
 
 🐧 Linux Setup
+
   1️⃣ Install Dependencies
   ```
   sudo apt update
@@ -42,6 +39,7 @@ cd b-tree-visualization
   ```
 
 🪟 Windows Setup
+
   1️⃣ Install Dependencies
   
   ```
@@ -51,6 +49,7 @@ cd b-tree-visualization
   
   pip install -r requirements.txt
   ```
+
   2️⃣ Run the Project
  ```
   python btree_visualization.py
