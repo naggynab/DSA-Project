@@ -1,7 +1,7 @@
 #  B-Tree Insertion & Visualization
 ##  Project Overview
 
-This project visualizes the insertion process in a ** B-Tree ** — a balanced tree data structure used in databases and file systems.
+This project visualizes the insertion process in a **B-Tree** — a balanced tree data structure used in databases and file systems.
 It demonstrates how nodes split dynamically to maintain balance as elements are inserted.
 Developed as part of the Data Structures and Algorithms (DSA) project.
 
